@@ -3,8 +3,6 @@ title: API Reference
 
 language_tabs: # must be one of https://git.io/vQNgJ
   - shell
-  - ruby
-  - python
   - javascript
 
 toc_footers:
@@ -19,221 +17,321 @@ search: true
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+Some Text about the purpose of Athena
 
-We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
 
-This example API documentation page was created with [Slate](https://github.com/lord/slate). Feel free to edit it and use it as a base for your own API's documentation.
+# Encompass
 
-# Authentication
+All endpoints in this section handle calls to the Encompass API
 
-> To authorize, use this code:
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-```
+## Issue Token
 
 ```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here"
-  -H "Authorization: meowmeowmeow"
+curl "http://example.com/api/encompass/token/issue
+  -H "username: sampleuser"
+  -H "password: 1Password""
 ```
 
 ```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-```
-
-> Make sure to replace `meowmeowmeow` with your API key.
-
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
-
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
-
-`Authorization: meowmeowmeow`
-
-<aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
-</aside>
-
-# Kittens
-
-## Get All Kittens
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
-
-```shell
-curl "http://example.com/api/kittens"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
+//TBD
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
-[
   {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
+ 	  "access_token": "6v8wKWREGjeECskvcibQtdiO7tWn",
+ 		"token_type": "Bearer"
   }
-]
 ```
 
-This endpoint retrieves all kittens.
+ Used by the client application to obtain an access token. (Taken from Encompass API Documentation)
+
 
 ### HTTP Request
 
-`GET http://example.com/api/kittens`
+`GET http://example.com/api/encompass/token/issue`
 
-### Query Parameters
+### Header Parameters
 
 Parameter | Default | Description
 --------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
+username | null | Username used to login to Encompass
+password | null | Password used to login to Encompass
 
 <aside class="success">
 Remember — a happy kitten is an authenticated kitten!
 </aside>
 
-## Get a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
+## Revoke Token
 
 ```shell
-curl "http://example.com/api/kittens/2"
-  -H "Authorization: meowmeowmeow"
+curl "http://example.com/api/encompass/token/revoke
+  -H "token:6v8wKWREGjeECskvcibQtdiO7tWn "
+"
 ```
 
 ```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
+//TBD
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
-{
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
-}
+  {
+ 	  "TBD": null 
+  }
 ```
 
-This endpoint retrieves a specific kitten.
-
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+ Used by the application to revoke an access token and invalidate the associated session. (Taken from Encompass API Documentation)
 
 ### HTTP Request
 
-`GET http://example.com/kittens/<ID>`
+`GET http://example.com/api/encompass/token/revoke`
 
-### URL Parameters
+### Header Parameters
 
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to retrieve
+Parameter | Default | Description
+--------- | ------- | -----------
+token | null | Encompass Token that will be revoked
 
-## Delete a Specific Kitten
 
-```ruby
-require 'kittn'
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.delete(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.delete(2)
-```
+## Token Introspection
 
 ```shell
-curl "http://example.com/api/kittens/2"
-  -X DELETE
-  -H "Authorization: meowmeowmeow"
+curl "http://example.com/api/encompass/token/introspection
+  -H "token:6v8wKWREGjeECskvcibQtdiO7tWn "
+"
 ```
 
 ```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.delete(2);
+//TBD
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
-{
-  "id": 2,
-  "deleted" : ":("
-}
+  {
+ 	  "TBD": null 
+  }
 ```
 
-This endpoint deletes a specific kitten.
+Used by the client application to validate an access token and retrieve the associated metadata. (Taken from Encompass API Documentation)
 
 ### HTTP Request
 
-`DELETE http://example.com/kittens/<ID>`
+`GET http://example.com/api/encompass/token/introspection`
 
-### URL Parameters
+### Header Parameters
 
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to delete
+Parameter | Default | Description
+--------- | ------- | -----------
+token | null | Encompass Token that will be introspected
 
+
+
+
+## Get Loan
+```shell
+curl "http://example.com/api/encompass/loan
+  -H "token:6v8wKWREGjeECskvcibQtdiO7tWn "
+  -H "loanID:123456 "
+"
+```
+
+```javascript
+//TBD
+```
+
+> The above command returns JSON structured like this:
+
+```json
+  {
+ 	  "TBD": null 
+  }
+```
+
+Used to query Encompass database for specified fields 
+
+### HTTP Request
+
+`GET http://example.com/api/encompass/loan`
+
+### Header Parameters
+
+Parameter | Default | Description
+--------- | ------- | -----------
+token | null | Encompass Token that will be introspected
+loanGUID | null | Encompass Loan ID
+desiredFields | null | TODO:  This should be a list of the fields we want from the particular loan
+
+
+
+## Reporting Pipeline
+```shell
+curl "http://example.com/api/encompass/pipeline/reporting
+
+  -H "token:6v8wKWREGjeECskvcibQtdiO7tWn "
+  -H "filterType:Funded "
+"
+```
+
+```javascript
+//TBD
+```
+
+> The above command returns JSON structured like this:
+
+```json
+  {
+ 	  "TBD": null 
+  }
+```
+
+Used to query Encompass database for all loans that are in the state specified but the "filterType" header parameter.  
+
+
+### HTTP Request
+
+`GET http://example.com/api/encompass/pipeline/reporting`
+
+### Header Parameters
+
+Parameter | Default | Description
+--------- | ------- | -----------
+token | null | Encompass Token that will be introspected
+filterType | null | Current status of loans requesting.  (Funded, Locked, Pre Approval, etc)
+
+
+## Mobile Pipeline
+```shell
+curl "http://example.com/api/encompass/pipeline/mobile
+
+  -H "token:6v8wKWREGjeECskvcibQtdiO7tWn "
+  -H "userID: test@vdmc.net "
+  -H "userType: Realtor "
+  -H "deviceID: gr32425grw-465hdb23-345234gv-74bsdadczyu6 "
+"
+```
+
+```javascript
+//TBD
+```
+
+> The above command returns JSON structured like this:
+
+```json
+  {
+ 	  "TBD": null 
+  }
+```
+
+Used to query Encompass database for loans that have the userType set to the user ID.  For example if the userType is Realtor and the userID is test@vdmc.net, this end point will query all loans to see where the Realtor Email address is equal to test@vdmc.net.
+
+### HTTP Request
+
+`GET http://example.com/api/encompass/pipeline/mobile`
+
+### Header Parameters
+
+Parameter | Default | Description
+--------- | ------- | -----------
+token | null | Encompass Token that will be introspected
+userID | null | Email of address of user whose pipeline being requested
+userType | null | Type of user whose pipeline being requested (Borrower, Realtor, LO)
+deviceID | null | Device ID of mobile device that is accessing the endpoint (Required for push notifications)
+
+#Communication
+##Send Push Notification
+```shell
+curl "http://example.com/api/communication/sendNotification
+
+  -H "message:Test Message "
+  -H "deviceID: gr32425grw-465hdb23-345234gv-74bsdadczyu6"
+
+"
+```
+
+```javascript
+//TBD
+```
+
+> The above command returns JSON structured like this:
+
+```json
+  {
+ 	  "TBD": null 
+  }
+```
+
+Used to send Notification to specified DeviceIDs
+
+### HTTP Request
+
+`GET http://example.com/api/communication/sendNotification`
+
+### Header Parameters
+
+Parameter | Default | Description
+--------- | ------- | -----------
+message|''| Message to be sent to devices
+deviceID | null | Device ID of mobile device that is accessing the endpoint (Required for push notifications)
+
+##Send SMS
+```shell
+curl "http://example.com/api/communication/sendSMS
+
+  -H "message:Test Message "
+  -H "phoneNumber:+15555555555"
+
+"
+```
+
+```javascript
+//TBD
+```
+
+> The above command returns JSON structured like this:
+
+```json
+  {
+ 	  "TBD": null 
+  }
+```
+
+Used to send SMS messages to specified phone number
+
+### HTTP Request
+
+`GET http://example.com/api/communication/sendSMS`
+
+### Header Parameters
+
+Parameter | Default | Description
+--------- | ------- | -----------
+message|''| Message to be sent to devices
+phoneNumber | null | Phone Number of device to receive SMS message
+
+#Top Of Mind
+
+#Floify
+These are viewable by us as developer, but we will need to have our own API definition that will be sure to keep Floifys API safe.
+##Get Floify Flows
+   [https://developer.floify.com/v1.0/reference#flows] (https://developer.floify.com/v1.0/reference#flows)
+##Get Loan Metadata
+ [https://developer.floify.com/v1.0/reference#loan-metadata] (https://developer.floify.com/v1.0/reference#loan-metadata)
+## Start Loan
+ [https://developer.floify.com/v1.0/reference#start] (https://developer.floify.com/v1.0/reference#start)
+## Download Floify Document
+ [https://developer.floify.com/v1.0/reference#download] (https://developer.floify.com/v1.0/reference#download)
+## Upload One Off Floify Document
+ [https://developer.floify.com/v1.0/reference#upload-onoff] (https://developer.floify.com/v1.0/reference#upload-onoff)
+## Upload Expected Floify Document
+ [https://developer.floify.com/v1.0/reference#upload] (https://developer.floify.com/v1.0/reference#upload)
+
+#Utilities
+
+<aside class="success">
+Remember — a happy kitten is an authenticated kitten!
+</aside>
